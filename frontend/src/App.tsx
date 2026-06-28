@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { VirtualizedMoleculeTable } from "./components/VirtualizedMoleculeTable";
 import "./styles.css";
 
 type HealthState = "checking" | "healthy" | "unreachable";
@@ -38,53 +39,20 @@ function App() {
   }, [apiBaseUrl]);
 
   return (
-    <main className="shell">
-      <section className="hero" aria-labelledby="page-title">
-        <div className="hero-copy">
-          <p className="eyebrow">Small-molecule design data</p>
-          <h1 id="page-title">Crucible</h1>
-          <p className="lede">
-            A self-hostable workspace for organizing compounds, assays, and design decisions
-            across lean discovery teams.
-          </p>
-          <div className="actions" aria-label="Service status">
-            <a className="primary-link" href={`${apiBaseUrl}/health`}>
-              API health
-            </a>
-            <span className={`status status-${healthState}`}>
-              {healthState === "checking" && "Checking API"}
-              {healthState === "healthy" && "API healthy"}
-              {healthState === "unreachable" && "API unreachable"}
-            </span>
-          </div>
+    <main className="app-shell">
+      <header className="app-header">
+        <div>
+          <p className="eyebrow">Linear CHI-15</p>
+          <h1>RDKit virtual grid spike</h1>
         </div>
+        <a className={`health-pill health-pill-${healthState}`} href={`${apiBaseUrl}/health`}>
+          {healthState === "checking" && "API checking"}
+          {healthState === "healthy" && "API healthy"}
+          {healthState === "unreachable" && "API unreachable"}
+        </a>
+      </header>
 
-        <div className="molecule-panel" aria-hidden="true">
-          <div className="ring ring-a" />
-          <div className="ring ring-b" />
-          <div className="bond bond-a" />
-          <div className="bond bond-b" />
-          <div className="atom atom-a" />
-          <div className="atom atom-b" />
-          <div className="atom atom-c" />
-          <div className="atom atom-d" />
-        </div>
-      </section>
-
-      <section className="system-strip" aria-label="Development services">
-        <div>
-          <span>Web</span>
-          <strong>Bun + Vite</strong>
-        </div>
-        <div>
-          <span>API</span>
-          <strong>FastAPI</strong>
-        </div>
-        <div>
-          <span>Database</span>
-          <strong>Postgres + RDKit</strong>
-        </div>
-      </section>
+      <VirtualizedMoleculeTable />
     </main>
   );
 }
