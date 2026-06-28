@@ -1,7 +1,11 @@
 import os
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
+
+from .migrations import run_migrations
+from .seed import seed_default_data
 
 
 def _cors_origins() -> list[str]:
@@ -9,9 +13,17 @@ def _cors_origins() -> list[str]:
     return [origin.strip() for origin in origins.split(",") if origin.strip()]
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    run_migrations()
+    seed_default_data()
+    yield
+
+
 app = FastAPI(
     title="Crucible API",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
